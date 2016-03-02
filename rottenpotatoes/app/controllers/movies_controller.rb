@@ -1,7 +1,7 @@
 class MoviesController < ApplicationController
   
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
+    params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
 
   def show
@@ -9,7 +9,15 @@ class MoviesController < ApplicationController
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
-
+  
+  def director_movie
+    if @movie.director == nil
+      redirect_to '/movies'
+    else
+      @movies.find_by_director(@movie.director)
+    end
+  end
+  
   def index
     sort = params[:sort] || session[:sort]
     case sort
