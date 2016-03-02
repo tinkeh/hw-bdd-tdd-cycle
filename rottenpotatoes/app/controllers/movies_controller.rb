@@ -10,7 +10,9 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
   
-  def director_movie
+  def director
+    id = params[:id]
+    @movie = Movie.find(id)
     if @movie.director == nil
       redirect_to '/movies'
     else
