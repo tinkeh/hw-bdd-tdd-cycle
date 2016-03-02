@@ -12,11 +12,26 @@ class MoviesController < ApplicationController
   
   def director
     id = params[:id]
-    @movie = Movie.find(id)
-    if @movie.director == nil
+    this_movie = Movie.find(id)
+    @movie_director = this_movie.director
+    # print Movie.find(id).title + "\n"
+    if @movie_director == ""
+      flash[:notice] = "'#{this_movie.title}' has no director info"
       redirect_to '/movies'
     else
-      @movies.find_by_director(@movie.director)
+      @all_ratings = Movie.all_ratings
+      @selected_ratings = params[:ratings] || session[:ratings] || {}
+      
+      if @selected_ratings == {}
+        @selected_ratings = Hash[@all_ratings.map {|rating| [rating, rating]}]
+      end
+      
+      if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+        session[:sort] = sort
+        session[:ratings] = @selected_ratings
+        redirect_to :sort => sort, :ratings => @selected_ratings and return
+      end
+      @similar_movies = Movie.where(director: @movie_director)
     end
   end
   
