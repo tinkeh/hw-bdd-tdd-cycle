@@ -12,6 +12,7 @@ class MoviesController < ApplicationController
   
   def director
     id = params[:id]
+    debugger
     this_movie = Movie.find(id)
     @movie_director = this_movie.director
     # print Movie.find(id).title + "\n"
@@ -31,7 +32,7 @@ class MoviesController < ApplicationController
         session[:ratings] = @selected_ratings
         redirect_to :sort => sort, :ratings => @selected_ratings and return
       end
-      @similar_movies = Movie.where(director: @movie_director)
+      @similar_movies = Movie.find_by_director(@movie_director)
     end
   end
   
